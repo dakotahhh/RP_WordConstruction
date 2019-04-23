@@ -50,83 +50,68 @@ namespace RP_WordConstruction
         }
 
         /// <summary>
-        /// 
+        /// First, we check if the length of the longestWord in the superset is still longer than the longest word in the subsetOfValidWords
+        /// We ask the user to submit a second letter to manipulate the last word in the subssetOfValidWords
+        /// We choose a "random" number to decide whether we are inserting at the beginning, middle, or end of the word we are manipulating
+        /// We check if this new word is already in the subsetOfValidWords and if it isn't we add it to the subsetofValidWords
+        /// We repeat this process until the length of the longest subsetword matches the length of the longest word in the superset
         /// </summary>
-        /// <param name="stepOneLetter">The valid word we are working with</param>
+        /// <param name="stepOneLetter">The starting letter that kicks off the process</param>
         private void AddSecondLetter(string validWord)
         {
-            while(longestWord.Length > validWord.Length)
+            string stepTwoLetter = "";
+            string possibleValidWord = "";
+            Random randomInsert = new Random();
+            int whichInsert;
+            string wordToManipulate = "";
+            
+            while(longestWord.Length > subsetOfValidWords.OrderByDescending(s => s.Length).FirstOrDefault().Length)
             {
                 Console.WriteLine("Submit a second letter a-z");
-                string stepTwoLetter = Console.ReadLine();
-                string possibleValidWord = string.Empty;
-                Random randomInsert = new Random();
-                //string wordToManipulate = subsetOfValidWords.Last();
-                string wordToManipulate = validWord;
-                string whatIs = "";
-                int whichInsert;
-                if (!subsetOfValidWords.Contains(stepTwoLetter))
+                stepTwoLetter = Console.ReadLine();
+                wordToManipulate = subsetOfValidWords.Last();
+                whichInsert = randomInsert.Next(1, 4);
+                switch (whichInsert)
                 {
-                    whichInsert = randomInsert.Next(1, 3);
-                    switch (whichInsert)
-                    {
-                        case 1:
-                            //beginning
-                            whatIs = wordToManipulate.Insert(0, stepTwoLetter);
-                            break;
-                        case 2:
-                            //end
-                            whatIs = wordToManipulate.Insert(wordToManipulate.Length, stepTwoLetter);
-                            break;
-                        case 3:
-                            //middle
-                            whatIs = wordToManipulate.Insert((wordToManipulate.Length / 2), stepTwoLetter);
-                            break;
-                        default:
-                            break;
-                    }
+                    case 1:
+                        //beginning
+                        possibleValidWord = wordToManipulate.Insert(0, stepTwoLetter);
+                        break;
+                    case 2:
+                        //end
+                        possibleValidWord = wordToManipulate.Insert(wordToManipulate.Length, stepTwoLetter);
+                        break;
+                    case 3:
+                        //middle
+                        possibleValidWord = wordToManipulate.Insert((wordToManipulate.Length / 2), stepTwoLetter);
+                        break;
+                    default:
+                        break;
                 }
-                if (!subsetOfValidWords.Contains(stepTwoLetter))
+                if (!subsetOfValidWords.Contains(possibleValidWord))
                 {
                     subsetOfValidWords.Add(possibleValidWord);
                 }
-                AddSecondLetter(subsetOfValidWords.Last());
             }
-            //Console.WriteLine("Submit a second letter a-z");
-            //stepTwoLetter = Console.ReadLine();
-            //whichInsert = randomInsert.Next(1, 3);
-            //switch (whichInsert)
-            //{
-            //    case 1:
-            //        whatIs = wordToManipulate.Insert(0, stepTwoLetter);
-            //        break;
-            //    case 2:
-            //        whatIs = wordToManipulate.Insert(wordToManipulate.Length, stepTwoLetter);
-            //        break;
-            //    case 3:
-            //        //middle
-            //        whatIs = wordToManipulate.Insert((wordToManipulate.Length / 2), stepTwoLetter);
-            //        break;
-            //    default:
-            //        break;
-            //}
-            //if (!subsetOfValidWords.Contains(stepTwoLetter))
-            //{
-            //    subsetOfValidWords.Add(possibleOutcome);
-            //}
+            IsTheSubSetValid();
+        }
+
+        /// <summary>
+        /// This method compares all the values in the subsetOfValidWords to find out if they are all in the validWordsSuperSet
+        /// If so, we pass, if not, we fail
+        /// </summary>
+        public void IsTheSubSetValid()
+        {
             bool pass = true;
             string subSet = "{";
-            if (subsetOfValidWords.Count == validWordsSuperSet.Count)
+            foreach (string s in subsetOfValidWords)
             {
-                foreach (string s in subsetOfValidWords)
-                {
-                    if (!validWordsSuperSet.Contains(s))
-                        pass = false;
-                    subSet += s;
-                }
+                if (!validWordsSuperSet.Contains(s))
+                    pass = false;
+                subSet += s;
             }
             subSet += "}";
-            Console.WriteLine(subSet);
+            Console.WriteLine(subSet + " ");
             Console.WriteLine("This subSet " + pass);
             Console.ReadLine();
         }
