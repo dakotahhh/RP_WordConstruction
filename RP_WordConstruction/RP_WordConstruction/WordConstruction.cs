@@ -25,9 +25,11 @@ namespace RP_WordConstruction
         public static void Main(string[] args)
         {
             WordConstruction wordConstruction = new WordConstruction();
-            Console.WriteLine("Welcome to Word Construction. \n" +
-                "Please submit a list of valid words as follows: { a, bb, ab, bbb, bab, bbbb } \n");
+            Console.WriteLine("Welcome to Word Construction. \n");
             wordConstruction.StartConstructions();
+            Console.WriteLine("Would you like to continue? Y or N");
+            if (Console.ReadLine().Equals("Y"))
+                wordConstruction.StartConstructions();
         }
 
         /// <summary>
@@ -39,14 +41,66 @@ namespace RP_WordConstruction
         /// </summary>
         private void StartConstructions()
         {
-            string validWords = Console.ReadLine().TrimStart('{').TrimEnd('}').Replace(" ", "");
-            validWordsSuperSet = validWords.Split(',').ToList();
-            differentLetters = validWords.Replace(",", "").Distinct().ToList();
-            longestWord = validWordsSuperSet.OrderByDescending(s => s.Length).FirstOrDefault();
-            Console.WriteLine("Submit any letter (a-z) to start with.");
-            string stepOneLetter = Console.ReadLine();
-            subsetOfValidWords.Add(stepOneLetter);
-            AddSecondLetter(stepOneLetter);
+            Console.Write("Please submit a list of valid words as follows: { a, bb, ab, bbb, bab, bbbb } \n");
+            string input = Console.ReadLine();
+            if(input.Trim().StartsWith("{") && input.Trim().EndsWith("}"))
+            {
+                bool containsInt = input.Any(char.IsDigit);
+                if(!containsInt)
+                {
+                    string validWords = input.TrimStart('{').TrimEnd('}').Replace(" ", "");
+                    if (string.IsNullOrEmpty(validWords))
+                    {
+                        Console.WriteLine("Input cannot be empty.");
+                        StartConstructions();
+                    }
+                    else
+                    {
+                        validWordsSuperSet = validWords.Split(',').ToList();
+                        if (validWordsSuperSet.Count == 1)
+                        {
+                            Console.Write("{ ");
+                            validWordsSuperSet.ForEach(Console.Write);
+                            Console.Write(" } This subset passes.");
+                            Console.ReadLine();
+                        }
+                        else
+                        {
+                            differentLetters = validWords.Replace(",", "").Distinct().ToList();
+                            longestWord = validWordsSuperSet.OrderByDescending(s => s.Length).FirstOrDefault();
+                            string stepOneLetter = InputCheck();
+                            subsetOfValidWords.Add(stepOneLetter.ToString());
+                            AddSecondLetter(stepOneLetter.ToString());
+                        }
+                    }
+                }
+                else
+                {
+                    Console.WriteLine("Valid words must only be letters a-z");
+                    StartConstructions();
+                }
+            }
+            else
+            {
+                Console.WriteLine("Input must start and end with braces ( { and } )");
+                StartConstructions();
+            }
+        }
+
+        /// <summary>
+        /// Checks if the letter inputted is only one letter and not a number
+        /// </summary>
+        /// <returns>The letter we received</returns>
+        private string InputCheck()
+        {
+            Console.WriteLine("Submit any letter (a-z).");
+            string input = Console.ReadLine();
+            if (input.Length != 1 || input.Any(char.IsDigit))
+            {
+                Console.WriteLine("Please submit only one letter.");
+                InputCheck();
+            }
+            return input;
         }
 
         /// <summary>
@@ -67,8 +121,7 @@ namespace RP_WordConstruction
             
             while(longestWord.Length > subsetOfValidWords.OrderByDescending(s => s.Length).FirstOrDefault().Length)
             {
-                Console.WriteLine("Submit a second letter a-z");
-                stepTwoLetter = Console.ReadLine();
+                stepTwoLetter = InputCheck();
                 wordToManipulate = subsetOfValidWords.Last();
                 whichInsert = randomInsert.Next(1, 4);
                 switch (whichInsert)
@@ -108,12 +161,11 @@ namespace RP_WordConstruction
             {
                 if (!validWordsSuperSet.Contains(s))
                     pass = false;
-                subSet += s;
+                subSet += (s + " ");
             }
             subSet += "}";
-            Console.WriteLine(subSet + " ");
-            Console.WriteLine("This subSet " + pass);
-            Console.ReadLine();
+            Console.WriteLine(subSet);
+            Console.WriteLine("This subSet " + (pass ? "passes" : "fails") + "\n\n");
         }
     }
 }

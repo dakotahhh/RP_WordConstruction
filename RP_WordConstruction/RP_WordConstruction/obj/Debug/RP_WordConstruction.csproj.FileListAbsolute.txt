@@ -4,3 +4,4 @@ C:\Users\Dakotah\source\RP_WordConstruction\RP_WordConstruction\RP_WordConstruct
 C:\Users\Dakotah\source\RP_WordConstruction\RP_WordConstruction\RP_WordConstruction\obj\Debug\RP_WordConstruction.csproj.CoreCompileInputs.cache
 C:\Users\Dakotah\source\RP_WordConstruction\RP_WordConstruction\RP_WordConstruction\obj\Debug\RP_WordConstruction.exe
 C:\Users\Dakotah\source\RP_WordConstruction\RP_WordConstruction\RP_WordConstruction\obj\Debug\RP_WordConstruction.pdb
+C:\Users\Dakotah\source\RP_WordConstruction\RP_WordConstruction\RP_WordConstruction\obj\Debug\RP_WordConstruction.csprojAssemblyReference.cache
